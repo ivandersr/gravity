@@ -11,6 +11,7 @@ const createFake = require('./fake.generator');
 
   if (!moduleName) {
     console.error('Module name cannot be empty!');
+    console.error('Usage: gravity <module.name>')
     return;
   }
 
@@ -21,7 +22,7 @@ const createFake = require('./fake.generator');
   const appRoot = fullPath ? fullPath[1] : path.dirname(require.main.filename);
 
   const rootModuleDirectory = path.resolve(
-    path.dirname(appRoot), 'src/modules', process.argv[2]
+    appRoot, 'src/modules', process.argv[2]
   );
 
   if (fs.existsSync(rootModuleDirectory)) {
@@ -43,8 +44,6 @@ const createFake = require('./fake.generator');
     await fs.promises.mkdir(path.resolve(rootModuleDirectory, dir), {
       recursive: true
     });
-
-    console.log(rootModuleDirectory);
 
     if (moduleDirectoriesWithInterface.includes(dir)) {
       await createInterface(
