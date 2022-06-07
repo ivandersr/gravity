@@ -14,8 +14,14 @@ const createFake = require('./fake.generator');
     return;
   }
 
+  const fullPath = /^(.*?)node_modules/.exec(
+    path.dirname(require.main.filename)
+  );
+
+  const appRoot = fullPath ? fullPath[1] : path.dirname(require.main.filename);
+
   const rootModuleDirectory = path.resolve(
-    path.dirname(require.main.filename), 'src/modules', process.argv[2]
+    path.dirname(appRoot), 'src/modules', process.argv[2]
   );
 
   if (fs.existsSync(rootModuleDirectory)) {
@@ -37,6 +43,8 @@ const createFake = require('./fake.generator');
     await fs.promises.mkdir(path.resolve(rootModuleDirectory, dir), {
       recursive: true
     });
+
+    console.log(rootModuleDirectory);
 
     if (moduleDirectoriesWithInterface.includes(dir)) {
       await createInterface(
