@@ -2,14 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 const createInterface = async (moduleName, filepath, isRepository = false) => {
-  moduleName += isRepository ? '.repository' : '';
+  const correctedModuleName = moduleName + (isRepository ? '.repository' : '');
 
-  const classname = `${moduleName.split('.').map((text) => {
+  const classname = `${correctedModuleName.split('.').map((text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }).join('')}`;
 
   await fs.promises.writeFile(
-    path.resolve(filepath, `i.${moduleName}.ts`),
+    path.resolve(filepath, `i.${correctedModuleName}.ts`),
     `export default interface I${classname} { }`,
     (err) => {
       if (err) {

@@ -2,16 +2,16 @@ const fs = require('fs');
 const path = require('path');
 
 const createFake = async (moduleName, filepath, isRepository = false) => {
-  moduleName += isRepository ? '.repository' : '';
+  const correctedModuleName = moduleName + (isRepository ? '.repository' : '');
 
-  const classname = `${moduleName.split('.').map((text) => {
+  const classname = `${correctedModuleName.split('.').map((text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }).join('')}`;
 
-  const classContent = `import I${classname} from '../i.${moduleName}';\n\nexport default class Fake${classname} implements I${classname} { }`;
+  const classContent = `import I${classname} from '../i.${correctedModuleName}';\n\nexport default class Fake${classname} implements I${classname} { }`;
 
   await fs.promises.writeFile(
-    path.resolve(filepath, `fake.${moduleName}.ts`),
+    path.resolve(filepath, `fake.${correctedModuleName}.ts`),
     classContent,
     (err) => {
       if (err) {
